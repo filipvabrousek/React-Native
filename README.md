@@ -12,3 +12,21 @@ export default class Hello extends Component{
   }
 }
 ```
+
+```js
+const styles = StyleSheet.create({
+  gra: {
+    color: "green",
+  }
+});
+
+export default class Imager extends Component {
+  render(){
+    return(
+  <View>
+   <Text style={styles.gra}>Green</Text>
+  </View>
+    );
+  }
+}
+```
