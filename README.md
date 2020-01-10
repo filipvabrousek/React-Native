@@ -1,4 +1,4 @@
-# React-Native
+# React Native
 Learning React Native since 10/01/2020
 
 ```js
