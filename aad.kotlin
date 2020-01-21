@@ -1,0 +1,229 @@
+package com.example.tab
+
+import android.media.Image
+import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.Composable
+import androidx.compose.Model
+import androidx.compose.unaryPlus
+import androidx.ui.core.*
+import androidx.ui.foundation.DrawImage
+import androidx.ui.foundation.VerticalScroller
+import androidx.ui.foundation.shape.corner.CircleShape
+import androidx.ui.graphics.Color
+import androidx.ui.layout.*
+import androidx.ui.material.*
+import androidx.ui.material.surface.Card
+import androidx.ui.material.surface.Surface
+import androidx.ui.res.imageResource
+import androidx.ui.text.TextStyle
+import androidx.ui.tooling.preview.Preview
+import kotlin.math.absoluteValue
+// import androidx.ui.foundation.shape.border.Border
+
+// 20:12:55 - To-Do List
+// 11:01:20 - first app built preview
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            App()
+        }
+    }
+}
+
+
+@Model
+class State(var items: MutableList<String> = mutableListOf("j"),
+            var count: Int = 0,
+            var itemToAdd:String = "")
+
+@Model
+class E(var show: Boolean = false)
+
+
+
+@Composable
+fun App(state: State = State()){
+    val arr = mutableListOf("Filip")
+    val r = E();
+
+
+    MaterialTheme {
+        FlexColumn {
+            expanded(flex = 1f){
+                bar(state, r)
+            }
+
+            expanded(flex = 1f) {
+                Enter(state)
+            }
+
+            expanded(flex = 8f){
+                Items(state, r)
+            }
+
+            expanded(flex = 1f) {
+                bottom()
+            }
+        }
+    }
+}
+
+
+@Composable
+fun bar(state: State, next: E){
+    TopAppBar(title = {
+        Row {
+            Text("News")
+           /* Button("+", onClick = {
+                if (state.itemToAdd.isNotEmpty()) {
+                    state.items.add(state.itemToAdd);
+                    state.count += 1;
+                    state.itemToAdd = "";
+                } else {
+                    next.show = true;
+                }
+            })*/
+
+            alert(next)
+        }
+
+    },
+        color = Color(52, 152, 219))
+}
+
+
+@Composable
+fun alert(next: E){
+
+    if (next.show) {
+        AlertDialog(
+                onCloseRequest = {
+                    print("")
+                },
+                title = {
+                    Text("Message empty.")
+                },
+
+
+                text = {
+                    Text("Please enter some text.")
+                },
+
+                confirmButton = {
+                    Button(text = "Ok", onClick = {
+                        println("I do it on!")
+                        next.show = false
+                    })
+                }
+                // Content()
+        )
+    }
+}
+
+
+@Composable
+fun Items(state: State, next: E){
+    VerticalScroller {
+        for (i in state.items){
+           todo(i, next);
+        }
+    }
+}
+
+
+// https://stackoverflow.com/questions/59725235/how-to-start-a-populated-listview-to-start-at-top-with-flutter-populated-listvi
+@Composable
+fun todo(text: String, next: E){
+    val typo = +MaterialTheme.typography()
+    val image = +imageResource(R.drawable.iceland);
+
+    Card(elevation = 2.dp){
+        Padding(padding = 12.dp){
+            Column(modifier = ExpandedWidth) {
+                Text("NEWS")
+                Text("Future is here",
+                   style = typo.h3)
+
+                Text("The Brigham investigators drew from the health care utilization data " +
+                        "from a large commercial insurance company in the United States, spanning 2004-2015. " +
+                        "A total of 2,303 individuals who overdosed.")
+
+                Button("Hello", onClick = {
+                    println("Hey")
+                    next.show = true;
+                })
+
+
+
+
+
+               /*
+               CRASHES ON CONTAINER
+
+
+               Container(modifier = Height(180.dp) wraps Expanded) {
+                    //  DrawImage(image = image);
+                }*/
+            }
+        }
+     }
+}
+
+
+@Composable
+fun Item(text: String){
+    MaterialTheme {
+        // Card(shape = RoundedCornerShape(8.dp)) {
+        val typo = +MaterialTheme.typography()
+        Text(text, style = typo.h6)
+        //  }
+    }
+}
+
+@Composable
+fun Enter(state: State){
+    Padding(padding = 10.dp){
+        TextField(value = state.itemToAdd, onValueChange = {state.itemToAdd = it})
+    }
+}
+
+@Composable
+fun bottom(){
+    BottomAppBar(
+        actionData = listOf("I", "love", "Compose!"),
+        color = Color(52, 152, 219)
+    ) { actionImage ->
+        AppBarIcon(+imageResource(R.drawable.settings)) { /* doSomething()*/ }
+    }
+}
+
+
+
+/*
+
+@Composable
+fun BottomAppBarNoFab(getMyActionImage: () -> Image, getMyNavigationImage: () -> Image) {
+    val someActionImage: Image = getMyActionImage()
+    val someNavigationImage: Image = getMyNavigationImage()
+    val navigationIcon: @Composable() () -> Unit = {
+        AppBarIcon(someNavigationImage) { /* doSomething()*/ }
+    }
+    val actionData = listOf(someActionImage)
+    BottomAppBar(
+        navigationIcon = navigationIcon,
+        actionData = actionData
+    ) { actionImage ->
+        AppBarIcon(actionImage) { /* doSomething()*/ }
+    }
+}
+*/
+
+
+@Preview
+@Composable
+fun DefaultPreview() {
+    App()
+}
